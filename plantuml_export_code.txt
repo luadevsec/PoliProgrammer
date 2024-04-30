@@ -1,0 +1,113 @@
+
+@startuml
+
+package linguagem {
+    interface Conversor {
+        + converter(String, String): String
+        + converterJava(String): String
+        + coverterGo(String): String
+        + converterJavascript(String): String
+        + converterTypescript(String): String
+        + converterPython(String): String
+    }
+    
+    class LinguagemConversor {
+        - suport_map : Dict<Linguagem>
+        
+        + suported(linguagem : String): boolean
+        + execute(linguagem_key : String, codigo : String): String
+    }
+    
+    abstract class Linguagem {
+        // object linguagem especifica
+        - suport_map : Dict<String>
+        + suported(linguagem : String): boolean
+    }
+    
+    class Python {
+        - suport_map : Dict<String>
+        + suported(linguagem : String): boolean
+        + converter(linguagem : String, codigo : String): String
+        //métodos map 
+        + converterJava(codigo: String): String
+        + converterJavascript(codigo: String): String
+        + converterGo(codigo: String): String
+    }
+    Linguagem <|-- Python
+    Conversor <|.. Python
+    LinguagemConversor --> Python
+    
+    class Javascript {
+        - suport_map : Dict<String>
+        + suported(linguagem : String): boolean
+        + converter(linguagem : String, codigo : String): String
+        //métodos map 
+        + converterJava(codigo: String): String
+        + converterPython(codigo: String): String
+        + converterGo(codigo: String): String
+    }
+    Linguagem <|-- Javascript
+    Conversor <|.. Javascript
+    LinguagemConversor --> Javascript
+    
+    class Java {
+        - suport_map : Dict<String>
+        + suported(linguagem : String): boolean
+        + converter(linguagem : String, codigo : String): String
+        //métodos map 
+        + converterJavascript(codigo: String): String
+        + converterPython(codigo: String): String
+        + converterGo(codigo: String): String
+    }
+    Linguagem <|-- Java
+    Conversor <|.. Java
+    LinguagemConversor --> Java
+    
+    class Typescript {
+        - suport_map : Dict<String>
+        + suported(linguagem : String): boolean
+        + converter(linguagem : String, codigo : String): String
+        //métodos map 
+        + converterJavascript(codigo: String): String
+    }
+    Linguagem <|-- Typescript
+    Conversor <|.. Typescript
+    LinguagemConversor --> Typescript
+    
+    class Go {
+        - suport_map : Dict<String>
+        + suported(linguagem : String): boolean
+        + converter(linguagem : String, codigo : String): String
+        //métodos map 
+        + converterJava(codigo: String): String
+        + converterPython(codigo: String): String
+    }
+    Linguagem <|-- Go
+    Conversor <|.. Go
+    LinguagemConversor --> Go
+    
+}
+
+package request {
+    class Router {
+        + receba(body : Json): void
+    }
+    Router --> APIController: faz o pedido para a APIController
+    
+    class APIController {
+        + postCodigo(codigo: String, linguagemOrigem: String, linguagemDestino: String): String
+        + getLinguagensSuportadas(): List<String>
+    }
+    APIController --> LinguagemConversor: conversão de código
+}
+    Router --> login.AuthManager: solicitação de autenticação
+
+package login {
+    class AuthManager {
+        + autenticar(id: String, key: UUID): boolean
+        // supondo que o cadastro existe
+    }
+}
+
+@enduml
+  
