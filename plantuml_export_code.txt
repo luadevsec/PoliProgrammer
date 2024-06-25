@@ -1,14 +1,14 @@
-
 @startuml
 
 package linguagem {
     interface Conversor {
         + converter(String, String): String
         + converterJava(String): String
-        + coverterGo(String): String
+        + converterGo(String): String
         + converterJavascript(String): String
         + converterTypescript(String): String
         + converterPython(String): String
+        + converterLua(String): String
     }
     
     class LinguagemConversor {
@@ -19,7 +19,6 @@ package linguagem {
     }
     
     abstract class Linguagem {
-        // object linguagem especifica
         - suport_map : Dict<String>
         + suported(linguagem : String): boolean
     }
@@ -28,7 +27,6 @@ package linguagem {
         - suport_map : Dict<String>
         + suported(linguagem : String): boolean
         + converter(linguagem : String, codigo : String): String
-        //métodos map 
         + converterJava(codigo: String): String
         + converterJavascript(codigo: String): String
         + converterGo(codigo: String): String
@@ -41,7 +39,6 @@ package linguagem {
         - suport_map : Dict<String>
         + suported(linguagem : String): boolean
         + converter(linguagem : String, codigo : String): String
-        //métodos map 
         + converterJava(codigo: String): String
         + converterPython(codigo: String): String
         + converterGo(codigo: String): String
@@ -54,7 +51,6 @@ package linguagem {
         - suport_map : Dict<String>
         + suported(linguagem : String): boolean
         + converter(linguagem : String, codigo : String): String
-        //métodos map 
         + converterJavascript(codigo: String): String
         + converterPython(codigo: String): String
         + converterGo(codigo: String): String
@@ -67,7 +63,6 @@ package linguagem {
         - suport_map : Dict<String>
         + suported(linguagem : String): boolean
         + converter(linguagem : String, codigo : String): String
-        //métodos map 
         + converterJavascript(codigo: String): String
     }
     Linguagem <|-- Typescript
@@ -78,7 +73,6 @@ package linguagem {
         - suport_map : Dict<String>
         + suported(linguagem : String): boolean
         + converter(linguagem : String, codigo : String): String
-        //métodos map 
         + converterJava(codigo: String): String
         + converterPython(codigo: String): String
     }
@@ -86,6 +80,34 @@ package linguagem {
     Conversor <|.. Go
     LinguagemConversor --> Go
     
+    class Lua {
+        - suport_map : Dict<String>
+        + suported(linguagem : String): boolean
+        + converter(linguagem : String, codigo : String): String
+    }
+    Linguagem <|-- Lua
+    Conversor <|.. Lua
+    LinguagemConversor --> Lua
+}
+
+package Democracia {
+    class Campanha {
+        + author: String
+        + votos: int
+        + origem: String
+        + destino: String
+        + idAuthor: String
+        + idCampanha: String
+    }
+    
+    class Democracia {
+        + getRanking(top: int, details: boolean): List<Campanha>
+        + postCandidate(origin: String, target: String, id: String, campanha: String): Campanha
+        + putVote(campanha: String) : void
+        + patchComplete(campanha: String, author: String) : void
+    }
+    
+    Democracia <.. Campanha
 }
 
 package request {
@@ -97,17 +119,23 @@ package request {
     class APIController {
         + postCodigo(codigo: String, linguagemOrigem: String, linguagemDestino: String): String
         + getLinguagensSuportadas(): List<String>
+        + getSuported(linguagem: String): boolean
+        + getRanking(top: int, details: boolean): List<String>
+        + postCandidate(linguagemOrigem: String, linguagemDestino: String, id: String, campanha: String): String
+        + putVote(campanha: String) : String
+        + patchComplete(campanha: String, author: String) : String
     }
-    APIController --> LinguagemConversor: conversão de código
+    
+    APIController --> Democracia.Democracia: gerenciamento de votos
+    APIController --> LinguagemConversor: conversÃ£o de cÃ³digo
 }
-    Router --> login.AuthManager: solicitação de autenticação
+    Router --> login.AuthManager: solicitaÃ§Ã£o de autenticaÃ§Ã£o
 
 package login {
     class AuthManager {
-        + autenticar(id: String, key: UUID): boolean
-        // supondo que o cadastro existe
+        + autenticar(email: String, key: UUID): String
+        + checarId(tempid: String) : String
     }
 }
 
 @enduml
-  
