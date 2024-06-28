@@ -1,93 +1,136 @@
 @startuml
 
 package linguagem {
+
+    ' Interface para Conversores de Linguagem
     interface Conversor {
         + converter(String, String): String
-        + converterJava(String): String
-        + converterGo(String): String
-        + converterJavascript(String): String
-        + converterTypescript(String): String
-        + converterPython(String): String
-        + converterLua(String): String
     }
-    
+
+    ' Classe Universal para integração de todas as linguagens
+    class Universal {
+        - suport_map : Dict<String>
+        + suported(linguagem : String): boolean
+        + converter(paradigma : String, codigo : String): String
+        - converterParadigmaFuncional(codigo: String): String
+        - converterParadigmaImperativo(codigo: String): String
+        - converterParadigmaLogico(codigo: String): String
+        - converterParadigmaOrientadoAObjetos(codigo: String): String
+    }
+
+    ' Classe abstrata para paradigmas
+    abstract class Paradigma {
+        - suport_map : Dict<String>
+        + suported(linguagem : String): boolean
+        + converter(linguagem : String, codigo : String): String
+    }
+
+    ' Classes para cada Paradigma
+    class ParadigmaImperativo {
+        - suport_map : Dict<Linguagem>
+        + suported(linguagem : String): boolean
+        + converter(linguagem : String, codigo : String): String
+        - converterGo(codigo: String): String
+        - converterJavascript(codigo: String): String
+        - converterLua(codigo: String): String
+        - converterTypescript(codigo: String): String
+    }
+
+    class ParadigmaFuncional {
+        - suport_map : Dict<Linguagem>
+        + suported(linguagem : String): boolean
+        + converter(linguagem : String, codigo : String): String
+    }
+
+    class ParadigmaLogico {
+        - suport_map : Dict<Linguagem>
+        + suported(linguagem : String): boolean
+        + converter(linguagem : String, codigo : String): String
+        - converterProlog(codigo: String): String
+    }
+
+    class ParadigmaOrientadoAObjetos {
+        - suport_map : Dict<Linguagem>
+        + suported(linguagem : String): boolean
+        + converter(linguagem : String, codigo : String): String
+        - converterJava(codigo: String): String
+        - converterPython(codigo: String): String
+    }
+
+    ' Interface para linguagem
+    interface Linguagem {
+        - suport_map : Dict<String>
+        + suported(paradigma : String): boolean
+        + converter(paradigma : String, codigo : String): String
+    }
+
+    ' Classes de Linguagens Específicas
+    class Python implements Linguagem {
+    }
+
+    class Javascript implements Linguagem {
+    }
+
+    class Java implements Linguagem {
+    }
+
+    class Typescript implements Linguagem {
+    }
+
+    class Go implements Linguagem {
+    }
+
+    class Lua implements Linguagem {
+    }
+
+    class Prolog implements Linguagem {
+    }
+
+    ' Ligações entre Linguagens e Paradigmas
+    ParadigmaOrientadoAObjetos <|-- Python
+    ParadigmaImperativo <|-- Javascript
+    ParadigmaOrientadoAObjetos <|-- Java
+    ParadigmaImperativo <|-- Typescript
+    ParadigmaImperativo <|-- Go
+    ParadigmaImperativo <|-- Lua
+    ParadigmaLogico <|-- Prolog
+
+    ' Ligações de Paradigmas com o Universal
+    Universal <|-- ParadigmaImperativo
+    Universal <|-- ParadigmaFuncional
+    Universal <|-- ParadigmaLogico
+    Universal <|-- ParadigmaOrientadoAObjetos
+
+    ' Ligações de Paradigmas com Paradigma (herança)
+    Paradigma <|-- ParadigmaImperativo
+    Paradigma <|-- ParadigmaFuncional
+    Paradigma <|-- ParadigmaLogico
+    Paradigma <|-- ParadigmaOrientadoAObjetos
+
+    ' Ligações de Linguagens e Conversores
+    Conversor <|.. Python
+    Conversor <|.. Javascript
+    Conversor <|.. Java
+    Conversor <|.. Typescript
+    Conversor <|.. Go
+    Conversor <|.. Lua
+    Conversor <|.. Prolog
+
+    ' Ligações de LinguagemConversor com Linguagens
+    LinguagemConversor --> Python
+    LinguagemConversor --> Javascript
+    LinguagemConversor --> Java
+    LinguagemConversor --> Typescript
+    LinguagemConversor --> Go
+    LinguagemConversor --> Lua
+    LinguagemConversor --> Prolog
+
+    ' Classe para execução dos conversores de linguagens
     class LinguagemConversor {
         - suport_map : Dict<Linguagem>
-        
         + suported(linguagem : String): boolean
         + execute(linguagem_key : String, codigo : String): String
     }
-    
-    abstract class Linguagem {
-        - suport_map : Dict<String>
-        + suported(linguagem : String): boolean
-    }
-    
-    class Python {
-        - suport_map : Dict<String>
-        + suported(linguagem : String): boolean
-        + converter(linguagem : String, codigo : String): String
-        + converterJava(codigo: String): String
-        + converterJavascript(codigo: String): String
-        + converterGo(codigo: String): String
-    }
-    Linguagem <|-- Python
-    Conversor <|.. Python
-    LinguagemConversor --> Python
-    
-    class Javascript {
-        - suport_map : Dict<String>
-        + suported(linguagem : String): boolean
-        + converter(linguagem : String, codigo : String): String
-        + converterJava(codigo: String): String
-        + converterPython(codigo: String): String
-        + converterGo(codigo: String): String
-    }
-    Linguagem <|-- Javascript
-    Conversor <|.. Javascript
-    LinguagemConversor --> Javascript
-    
-    class Java {
-        - suport_map : Dict<String>
-        + suported(linguagem : String): boolean
-        + converter(linguagem : String, codigo : String): String
-        + converterJavascript(codigo: String): String
-        + converterPython(codigo: String): String
-        + converterGo(codigo: String): String
-    }
-    Linguagem <|-- Java
-    Conversor <|.. Java
-    LinguagemConversor --> Java
-    
-    class Typescript {
-        - suport_map : Dict<String>
-        + suported(linguagem : String): boolean
-        + converter(linguagem : String, codigo : String): String
-        + converterJavascript(codigo: String): String
-    }
-    Linguagem <|-- Typescript
-    Conversor <|.. Typescript
-    LinguagemConversor --> Typescript
-    
-    class Go {
-        - suport_map : Dict<String>
-        + suported(linguagem : String): boolean
-        + converter(linguagem : String, codigo : String): String
-        + converterJava(codigo: String): String
-        + converterPython(codigo: String): String
-    }
-    Linguagem <|-- Go
-    Conversor <|.. Go
-    LinguagemConversor --> Go
-    
-    class Lua {
-        - suport_map : Dict<String>
-        + suported(linguagem : String): boolean
-        + converter(linguagem : String, codigo : String): String
-    }
-    Linguagem <|-- Lua
-    Conversor <|.. Lua
-    LinguagemConversor --> Lua
 }
 
 package Democracia {
